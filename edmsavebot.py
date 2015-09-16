@@ -1,36 +1,53 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.1
+# Version 1.1.1
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
 #
+#
 # CHANGES:
 #
-# Version 1.1:
+# Version 1.1.1
+#   - Login information can now be passed from command-line.
+#
+# Version 1.1.0:
 #   - Remove usernames from comment.
 #   - Remove login information. Ask for it instead. (Replace with console arguments later.)
 #   - Modify loop delay to 15 seconds. 2 was too fast.
 #   - Add time to loop debug for an easy answer to "did it freeze?".
 #
-# Version 1.0:
+# Version 1.0.0:
 #   - Check subreddit for posts linking back to reddit.
 #   - Check links for post type.
 #   - Post in comment of new post saving post text, time, and karma.
 
-import praw # reddit wrapper
-import re   # Regular expressions
-import time # Clock for nice comments
+import praw     # reddit wrapper
+import re       # Regular expressions
+import time     # Clock for nice comments
+import argparse # Allow for signing in from command-line
 
 print("D: Imports completed")
 
-r = praw.Reddit("PRAW // EDMSave // v1.0 // /u/link2x") # User agent to comply with reddit API standards
+r = praw.Reddit("PRAW // EDMSave // v1.1.1 // /u/link2x") # User agent to comply with reddit API standards
 
 print("D: PRAW initialized")
 
-redditUser = input("Bot account name: ")
-redditPass = input("Bot account pass: ")
+commandParse = argparse.ArgumentParser()
+commandParse.add_argument("-username",help="reddit username",type=str)
+commandParse.add_argument("-password",help="reddit password",type=str)
+commandInput = commandParse.parse_args()
+
+redditUser = None
+redditUser = commandInput.username
+redditPass = None
+redditPass = commandInput.password
+
+if (not redditUser):
+    redditUser = input("Bot account name: ")
+if (not redditPass):
+    redditPass = input("Bot account pass: ")
 
 r.login(redditUser,redditPass) # Connect to reddit
 
