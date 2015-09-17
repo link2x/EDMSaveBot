@@ -1,13 +1,16 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.1.5
+# Version 1.1.6
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
 #
 #
 # CHANGES:
+#
+# Version 1.1.6
+#   - Fix detection of non-applicable links within reddit.
 #
 # Version 1.1.5
 #   - Modified post formatting.
@@ -42,7 +45,7 @@ import argparse # Allow for signing in from command-line
 
 print("D: Imports completed")
 
-r = praw.Reddit("PRAW // EDMSave // v1.1.5 // /u/link2x") # User agent to comply with reddit API standards
+r = praw.Reddit("PRAW // EDMSave // v1.1.6 // /u/link2x") # User agent to comply with reddit API standards
 
 print("D: PRAW initialized")
 
@@ -81,7 +84,7 @@ while True: #Main loop
     for submission in subreddit.get_new(limit=10): #We'll look at the 10 newest posts
         if submission.id not in already_done: # Make sure we haven't already ran this post
             if ((submission.is_self==False) and (submission.domain=='reddit.com')): #If the post is a link pointing at reddit
-                if any(string in submission.url for string in '/comments/'): #Verify it's a post or comment we're being linked to
+                if ('/comments/' in str(submission.url)): #Verify it's a post or comment we're being linked to
                     searchComments = submission.comments # For all comments here
                     flatSearch = praw.helpers.flatten_tree(searchComments) # ^
                     for comment in flatSearch: # Run each comment
