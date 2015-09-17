@@ -1,13 +1,16 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.1.4
+# Version 1.1.5
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
 #
 #
 # CHANGES:
+#
+# Version 1.1.5
+#   - Modified post formatting.
 #
 # Version 1.1.4
 #   - Fixes formatting when saving comments.
@@ -39,7 +42,7 @@ import argparse # Allow for signing in from command-line
 
 print("D: Imports completed")
 
-r = praw.Reddit("PRAW // EDMSave // v1.1.1 // /u/link2x") # User agent to comply with reddit API standards
+r = praw.Reddit("PRAW // EDMSave // v1.1.5 // /u/link2x") # User agent to comply with reddit API standards
 
 print("D: PRAW initialized")
 
@@ -125,9 +128,9 @@ while True: #Main loop
                         formatTime = time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime(postTime)) # ^
 
                         if savingComments == True:
-                            botComment = 'The linked '+postType+' was posted '+formatTime+'\n\nThe post was as follows:\n\n'+postText+'\n****\nI saved this post '+botTime+"\n\nAt that time, the post's score was "+postScore+'.\n\n\nI\'m a bot, if you\'d like to learn more you can do so at /r/EDMSaveBot.'
+                            botComment = 'The linked '+postType+' was posted '+formatTime+'\n\n'+postText+'\n****\n('+postScore+' Karma) ([About](/r/EDMSaveBot))'
                         else:
-                            botComment = 'The linked '+postType+' was posted '+formatTime+'\n\nThe post was as follows:\n****\n**'+postTitle+'**\n\n'+postText+'\n****\nI saved this post '+botTime+"\n\nAt that time, the post's score was "+postScore+'.\n\n\nI\'m a bot, if you\'d like to learn more you can do so at /r/EDMSaveBot.'
+                            botComment = 'The linked '+postType+' was posted '+formatTime+'\n****\n**'+postTitle+'**\n\n'+postText+'\n****\n('+postScore+' Karma) ([About](/r/EDMSaveBot))'
 
                         print("D: Comment formatted") # Debug for easy following
                     
