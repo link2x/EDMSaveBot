@@ -1,42 +1,11 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.1.6
+# Version 1.1.7
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
 #
-#
-# CHANGES:
-#
-# Version 1.1.6
-#   - Fix detection of non-applicable links within reddit.
-#
-# Version 1.1.5
-#   - Modified post formatting.
-#
-# Version 1.1.4
-#   - Fixes formatting when saving comments.
-#
-# Version 1.1.3
-#   - Cut down on the debug messages for N/A posts by adding them to the avoid-list.
-#
-# Version 1.1.2
-#   - Subreddit can now be passed from command-line.
-#
-# Version 1.1.1
-#   - Login information can now be passed from command-line.
-#
-# Version 1.1.0:
-#   - Remove usernames from comment.
-#   - Remove login information. Ask for it instead. (Replace with console arguments later.)
-#   - Modify loop delay to 15 seconds. 2 was too fast.
-#   - Add time to loop debug for an easy answer to "did it freeze?".
-#
-# Version 1.0.0:
-#   - Check subreddit for posts linking back to reddit.
-#   - Check links for post type.
-#   - Post in comment of new post saving post text, time, and karma.
 
 import praw     # reddit wrapper
 import re       # Regular expressions
@@ -45,7 +14,14 @@ import argparse # Allow for signing in from command-line
 
 print("D: Imports completed")
 
-r = praw.Reddit("PRAW // EDMSave // v1.1.6 // /u/link2x") # User agent to comply with reddit API standards
+botVersionMajor = 1
+botVersionMinor = 1
+botVersionBuild = 7
+botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
+
+botOwner = '/u/link2x'
+
+r = praw.Reddit("PRAW // EDMSave // v"+botVersionString+" // "+botOwner) # User agent to comply with reddit API standards
 
 print("D: PRAW initialized")
 
@@ -53,6 +29,7 @@ commandParse = argparse.ArgumentParser()
 commandParse.add_argument("-username",help="reddit username",type=str)
 commandParse.add_argument("-password",help="reddit password",type=str)
 commandParse.add_argument("-subreddit",help="subreddit to run on",type=str)
+commandParse.add_argument("-lowkarma",help="adds a 10-minute wait after comments",action="store_true")
 commandInput = commandParse.parse_args()
 
 redditUser = None
@@ -61,6 +38,9 @@ redditPass = None
 redditPass = commandInput.password
 redditSub = None
 redditSub = commandInput.subreddit
+
+lowKarma = False
+lowKarma = commandInput.lowkarma
 
 if (not redditUser):
     redditUser = input("Bot account name: ")
@@ -79,7 +59,6 @@ regexString = '/(.{7})(/*)$|\n' # This is used to differentiate between links to
 regexRE = re.compile(regexString) # This allows the above string to be used to search
 
 while True: #Main loop
-    print("D: Loop begin")
     subreddit = r.get_subreddit(redditSub) #Set our subreddit. Glorious master race
     for submission in subreddit.get_new(limit=10): #We'll look at the 10 newest posts
         if submission.id not in already_done: # Make sure we haven't already ran this post
@@ -97,7 +76,7 @@ while True: #Main loop
                         
                         loadedPost = r.get_submission(url=httpsUrl) # It's go time; load the link
                         
-                        savingComments = regexRE.search(submission.url) # Are we looking for a comment, or just a post?
+                        savingComments = regexRE.search(httpsUrl) # Are we looking for a comment, or just a post?
 
                         print("D: New post") # Debug for easy following
 
@@ -142,6 +121,10 @@ while True: #Main loop
                         print("D: Comment posted") # Debug for easy following
 
                         already_done.append(submission.id)
+
+                        if lowKarma:
+                            print("D: Low-karma wait started")
+                            time.sleep(600)
 
                 else:
                     print("D: Post not applicable: Doesn't link to a post or comment") # Debug for easy following
