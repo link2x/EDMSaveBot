@@ -1,3 +1,6 @@
+##Version 1.1.8
+* Add Try-Except clause to try and avoid crashing from 404 errors.
+
 ##Version 1.1.7
 * Changelog is now separate.
 * Simplify version and user agent string changes
