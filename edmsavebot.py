@@ -135,3 +135,5 @@ while True: #Main loop
                     already_done.append(submission.id)
         print("D: Loop end "+time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()))
         time.sleep(15) # Wait a few seconds before looping
+    except:
+        raise;
