@@ -1,3 +1,7 @@
+##Version 1.1.9
+* Fixes NP links, as they couldn't previously be seen due to the domain check.
+* Partially reverts 1.1.8; the except clause wasn't correct. Will correct soon.
+
 ##Version 1.1.8
 * Add Try-Except clause to try and avoid crashing from 404 errors.
 
