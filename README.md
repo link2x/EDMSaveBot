@@ -30,6 +30,9 @@ As you garner upvotes, this problem will subside. You can alleviate this issue u
 
 ## Available Flags:
 `-username User` - Allows you to set the username from the commandline.
+
 `-password Pass` - Allows you to set the password from the commandline. Insecure on linux.
+
 `-subreddit Sub` - Allows you to set the subreddit from the commandline.
+
 `-lowkarma` - Adds a 10-minute pause between comments, used to alleviate low-karma cooldowns.
