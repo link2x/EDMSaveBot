@@ -16,7 +16,7 @@ print("D: Imports completed")
 
 botVersionMajor = 1
 botVersionMinor = 1
-botVersionBuild = 8
+botVersionBuild = 9
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
 
 botOwner = '/u/link2x'
@@ -63,7 +63,7 @@ while True: #Main loop
         subreddit = r.get_subreddit(redditSub) #Set our subreddit. Glorious master race
         for submission in subreddit.get_new(limit=10): #We'll look at the 10 newest posts
             if submission.id not in already_done: # Make sure we haven't already ran this post
-                if ((submission.is_self==False) and (submission.domain=='reddit.com')): #If the post is a link pointing at reddit
+                if ((submission.is_self==False) and (submission.domain=='reddit.com' or submission.domain=='np.reddit.com')): #If the post is a link pointing at reddit
                     if ('/comments/' in str(submission.url)): #Verify it's a post or comment we're being linked to
                         searchComments = submission.comments # For all comments here
                         flatSearch = praw.helpers.flatten_tree(searchComments) # ^
