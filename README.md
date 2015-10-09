@@ -26,4 +26,10 @@ or on Windows:
 This will run the bot as the stated user in the stated subreddit.
 
 Be aware that the bot will fail when posting comments at speed, due to reddit's limitations.
-As you garner upvotes, this problem will subside.
+As you garner upvotes, this problem will subside. You can alleviate this issue using the `-lowkarma` flag.
+
+## Available Flags:
+`-username User` - Allows you to set the username from the commandline.
+`-password Pass` - Allows you to set the password from the commandline. Insecure on linux.
+`-subreddit Sub` - Allows you to set the subreddit from the commandline.
+`-lowkarma` - Adds a 10-minute pause between comments, used to alleviate low-karma cooldowns.
