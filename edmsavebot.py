@@ -16,7 +16,7 @@ print("D: Imports completed")
 
 botVersionMajor = 1
 botVersionMinor = 1
-botVersionBuild = 9
+botVersionBuild = 10
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
 
 botOwner = '/u/link2x'
@@ -135,5 +135,8 @@ while True: #Main loop
                     already_done.append(submission.id)
         print("D: Loop end "+time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()))
         time.sleep(15) # Wait a few seconds before looping
+    except praw.errors.HTTPException:
+        print("D: Reddit is slow. Re-looping.")
+        sleep(5)
     except:
         raise;

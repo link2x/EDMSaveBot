@@ -1,3 +1,6 @@
+##Version 1.1.10
+* Tries to more-or-less recover from 404 errors.
+
 ##Version 1.1.9
 * Fixes NP links, as they couldn't previously be seen due to the domain check.
 * Partially reverts 1.1.8; the except clause wasn't correct. Will correct soon.
