@@ -137,6 +137,6 @@ while True: #Main loop
         time.sleep(15) # Wait a few seconds before looping
     except praw.errors.HTTPException:
         print("D: Reddit is slow. Re-looping.")
-        sleep(5)
+        time.sleep(5)
     except:
         raise;
