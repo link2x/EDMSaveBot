@@ -1,3 +1,7 @@
+##Version 1.2.0
+* Adds `-verbose` flag. Most debug messages are now hidden without it.
+* Sleep error in our comeback code is now fixed. See the previous commit for info.
+
 ##Version 1.1.10
 * Tries to more-or-less recover from 404 errors.
 

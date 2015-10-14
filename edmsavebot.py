@@ -15,8 +15,8 @@ import argparse # Allow for signing in from command-line
 print("D: Imports completed")
 
 botVersionMajor = 1
-botVersionMinor = 1
-botVersionBuild = 10
+botVersionMinor = 2
+botVersionBuild = 0
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
 
 botOwner = '/u/link2x'
@@ -30,6 +30,7 @@ commandParse.add_argument("-username",help="reddit username",type=str)
 commandParse.add_argument("-password",help="reddit password",type=str)
 commandParse.add_argument("-subreddit",help="subreddit to run on",type=str)
 commandParse.add_argument("-lowkarma",help="adds a 10-minute wait after comments",action="store_true")
+commandParse.add_argument("-verbose",help="adds a 10-minute wait after comments",action="store_true")
 commandInput = commandParse.parse_args()
 
 redditUser = None
@@ -41,6 +42,9 @@ redditSub = commandInput.subreddit
 
 lowKarma = False
 lowKarma = commandInput.lowkarma
+
+verboseMode = False
+verboseMode = commandInput.verbose
 
 if (not redditUser):
     redditUser = input("Bot account name: ")
@@ -70,7 +74,8 @@ while True: #Main loop
                         for comment in flatSearch: # Run each comment
                             if str(comment.author) == "EDMSaveBot": # Looking for our name
                                 already_done.append(submission.id) # Add this post to the list if we find it
-                                print("D: Added old post to avoid list") # Debug for easy following
+                                if verboseMode:
+                                    print("D: Added old post to avoid list") # Debug for easy following
                         if submission.id not in already_done: #Make sure we haven't already ran this post
 
                             httpsUrl = submission.url.replace("http://","https://") # Our bot expects HTTPS links, this makes sure we don't get bounced
@@ -82,7 +87,8 @@ while True: #Main loop
                             print("D: New post") # Debug for easy following
 
                             if savingComments:
-                                print("D: Linked to a comment") # Debug for easy following
+                                if verboseMode:
+                                    print("D: Linked to a comment") # Debug for easy following
                                 loadedComment = loadedPost.comments[0] # Load the top comment (automatically the linked comment)
                                 postType = 'comment' # Label the post
                                 postTitle = '' # Blanked to avoid possible issues
@@ -90,9 +96,11 @@ while True: #Main loop
                                 postText = loadedComment.body # Save the post
                                 postScore = str(loadedComment.score) # Save the post's score
                                 postTime = loadedComment.created_utc # Save the post's origin/edit date
-                                print("D: Data collected successfully") # Debug for easy following
+                                if verboseMode:
+                                    print("D: Data collected successfully") # Debug for easy following
                             else:
-                                print("D: Linked to a submission") # Debug for easy following
+                                if verboseMode:
+                                    print("D: Linked to a submission") # Debug for easy following
                                 # We don't nead to load the post as it's already been loaded
                                 postTitle = loadedPost.title
                                 if (loadedPost.is_self==True):
@@ -104,7 +112,8 @@ while True: #Main loop
                                 postRedditor = str(loadedPost.author) # Save the author    
                                 postScore = str(loadedPost.score) # Save the post's score
                                 postTime = loadedPost.created_utc # Save the post's origin/edit date
-                                print("D: Data collected successfully") # Debug for easy following
+                                if verboseMode:
+                                    print("D: Data collected successfully") # Debug for easy following
 
                             # Now we have the information, lets set up our post
                             botTime = time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()) # Keep everything in UTC because why not
@@ -119,24 +128,29 @@ while True: #Main loop
                     
                             # Now we're all set to post, here we go.
                             submission.add_comment(botComment)
-                            print("D: Comment posted") # Debug for easy following
+                            if verboseMode:
+                                print("D: Comment posted") # Debug for easy following
     
                             already_done.append(submission.id)
 
                             if lowKarma:
-                                print("D: Low-karma wait started")
+                                if verboseMode:
+                                    print("D: Low-karma wait started")
                                 time.sleep(600)
 
                     else:
-                        print("D: Post not applicable: Doesn't link to a post or comment") # Debug for easy following
+                        if verboseMode:
+                            print("D: Post not applicable: Doesn't link to a post or comment") # Debug for easy following
                         already_done.append(submission.id)
                 else:
-                    print("D: Post not applicable: Doesn't link within reddit") # Debug for easy following
+                    if verboseMode:
+                        print("D: Post not applicable: Doesn't link within reddit") # Debug for easy following
                     already_done.append(submission.id)
         print("D: Loop end "+time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()))
         time.sleep(15) # Wait a few seconds before looping
     except praw.errors.HTTPException:
-        print("D: Reddit is slow. Re-looping.")
+        if verboseMode:
+            print("D: Reddit is slow. Re-looping.")
         time.sleep(5)
     except:
         raise;

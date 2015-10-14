@@ -36,3 +36,5 @@ As you garner upvotes, this problem will subside. You can alleviate this issue u
 `-subreddit Sub` - Allows you to set the subreddit from the commandline.
 
 `-lowkarma` - Adds a 10-minute pause between comments, used to alleviate low-karma cooldowns.
+
+`-verbose` - Shows more debug messages. Most are now hidden by default.
