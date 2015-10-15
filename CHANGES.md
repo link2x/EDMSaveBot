@@ -1,3 +1,8 @@
+##Version 1.2.1
+* More error handling.
+* More messages moved to verbose.
+* D: message type changed to I: (info) and E: (error) for some messages.
+
 ##Version 1.2.0
 * Adds `-verbose` flag. Most debug messages are now hidden without it.
 * Sleep error in our comeback code is now fixed. See the previous commit for info.
