@@ -35,7 +35,7 @@ if verboseMode:
 
 botVersionMajor = 1
 botVersionMinor = 2
-botVersionBuild = 1
+botVersionBuild = 2
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
 
 botOwner = '/u/link2x'
@@ -150,9 +150,12 @@ while True: #Main loop
                     already_done.append(submission.id)
         print("I: Loop end "+time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()))
         time.sleep(15) # Wait a few seconds before looping
-    except praw.errors.HTTPException: # Catch reddit servers being slow, since that happens all the time.
+    except praw.errors.Forbidden:
+        if verboseMode:
+                print("D: Forbidden subreddit or post.")
+        already_done.append(submission.id)
+    except praw.errors.HTTPException as e: # Catch reddit servers being slow, since that happens all the time.
         print("E: Reddit is slow. Re-looping.")
-        time.sleep(5)
     except requests.exceptions.ConnectionError: # I'm not sure what's behind this one. Perhaps HTTPS or some strange reddit slowness?
         print("E: Something strange happened. requests.exceptions.ConnectionError")
     except requests.exceptions.HTTPError as e: # These usually are caught in the first except, but just in case this catches 404s and the like.
