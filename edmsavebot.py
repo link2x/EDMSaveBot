@@ -1,7 +1,7 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.2.1
+# Version 1.3.0
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
@@ -11,6 +11,7 @@ import praw     # reddit wrapper
 import re       # Regular expressions
 import time     # Clock for nice comments
 import argparse # Allow for signing in from command-line
+import requests # I guess praw uses this. Redefine to calm python down.
 
 commandParse = argparse.ArgumentParser()
 commandParse.add_argument("-username",help="reddit username",type=str)
@@ -34,8 +35,8 @@ if verboseMode:
     print("D: Imports completed")
 
 botVersionMajor = 1
-botVersionMinor = 2
-botVersionBuild = 2
+botVersionMinor = 3
+botVersionBuild = 0
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
 
 botOwner = '/u/link2x'
@@ -45,18 +46,31 @@ r = praw.Reddit("PRAW // EDMSave // v"+botVersionString+" // "+botOwner) # User 
 if verboseMode:
     print("D: PRAW initialized")
 
-if (not redditUser):
-    redditUser = input("Bot account name: ")
-if (not redditPass):
-    redditPass = input("Bot account pass: ")
 if (not redditSub):
     redditSub = input("Subreddit to run on: ")
 
-r.login(redditUser,redditPass) # Connect to reddit
+print("Please sign into your bot account.")
+
+# I can't say I was ready for OAuth. But okay.
+r.set_oauth_app_info(client_id='dyxM6A3_apsmhw',
+			client_secret='FvQxLB6AXl5G9CbEOLC0DOrJgm8',
+			redirect_uri='http://127.0.0.1:65010/'
+			'authorize_callback')
+
+url = r.get_authorize_url('uniqueKey','identity edit read submit',True)
+
+print(url)
+key = input("Reddit Key: ")
+
+access_information = r.get_access_information(key)
+r.set_access_credentials(**access_information)
+
+me = r.get_me()
+
 
 if verboseMode:
     print("D: Logged in to reddit")
-print("EDMSaveBot version "+botVersionString+" running as /u/"+redditUser+" on /r/"+redditSub)
+print("EDMSaveBot version "+botVersionString+" running on /r/"+redditSub)
 
 already_done = [] # Used to help avoid re-commenting, doesn't last through reboots currently.
 regexString = '/(.{7})(/*)$|\n' # This is used to differentiate between links to posts and links to comments
@@ -79,6 +93,7 @@ while True: #Main loop
                         if submission.id not in already_done: #Make sure we haven't already ran this post
 
                             httpsUrl = submission.url.replace("http://","https://") # Our bot expects HTTPS links, this makes sure we don't get bounced
+                            httpsUrl = httpsUrl.replace("//reddit","//www.reddit") # People apparently can't link properly. This is causing greif
                         
                             loadedPost = r.get_submission(url=httpsUrl) # It's go time; load the link
                         

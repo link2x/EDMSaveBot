@@ -1,3 +1,6 @@
+##Version 1.3.0
+* OAuth happened.
+
 ##Version 1.2.1
 * More error handling.
 * More messages moved to verbose.
