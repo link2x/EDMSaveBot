@@ -17,7 +17,7 @@ Inside edmsavebot.py, modify the user agent to something unique to your bot.
 
 Then, run the following:
 
-`python3 /path/to/bot/edmsavebot.py -username LeRedditor -password LePassword -subreddit gifs`
+`python3 /path/to/bot/edmsavebot.py --subreddit gifs`
 
 
 or on Windows:
