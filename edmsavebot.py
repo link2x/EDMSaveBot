@@ -1,7 +1,7 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.3.1
+# Version 1.3.2
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
@@ -39,7 +39,9 @@ if verboseMode:
     print("D: Imports completed")
 
 def send_notify(command, text):
-    call([command,text])
+    if verboseMode:
+        print("D: Calling "+command+" "+text)
+    call([command,text], shell=True)
     return 1
 
 if verboseMode:
@@ -47,7 +49,7 @@ if verboseMode:
 
 botVersionMajor  = 1
 botVersionMinor  = 3
-botVersionBuild  = 1
+botVersionBuild  = 2
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
 
 botOwner = '/u/link2x'
@@ -188,6 +190,6 @@ while True: #Main loop
         print("E: HTTP Code ", e.message)
     except: # I don't want this thing to crash, but this at least lets me know /when/ it happens.
         if notify:
-            send_notify(notify, "EDMSaveBot running on /r/"+redditSub+" has crashed.")
+            send_notify(notify, "'EDMSaveBot running on /r/"+redditSub+" has crashed.'")
         print("E: Unexpected error. Raising", time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()))
         raise;

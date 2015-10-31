@@ -1,3 +1,6 @@
+##Version 1.3.2
+* -notify actually works now.
+
 ##Version 1.3.1
 * -notify added. Combine with your favorite script/program.
 * Made the code look a tad nicer.
