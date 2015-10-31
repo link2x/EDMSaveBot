@@ -41,7 +41,7 @@ if verboseMode:
 def send_notify(command, text):
     if verboseMode:
         print("D: Calling "+command+" "+text)
-    call([command,text], shell=True)
+    call([command+" "+text], shell=True)
     return 1
 
 if verboseMode:
