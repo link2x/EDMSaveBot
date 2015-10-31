@@ -1,17 +1,18 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.3.0
+# Version 1.3.1
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
 #
 
-import praw     # reddit wrapper
-import re       # Regular expressions
-import time     # Clock for nice comments
-import argparse # Allow for signing in from command-line
-import requests # I guess praw uses this. Redefine to calm python down.
+import praw                 # reddit wrapper
+import re                   # Regular expressions
+import time                 # Clock for nice comments
+import argparse             # Allow for signing in from command-line
+import requests             # I guess praw uses this. Redefine to calm python down.
+from subprocess import call # We use this for -notify
 
 commandParse = argparse.ArgumentParser()
 commandParse.add_argument("-username",help="reddit username",type=str)
@@ -19,24 +20,34 @@ commandParse.add_argument("-password",help="reddit password",type=str)
 commandParse.add_argument("-subreddit",help="subreddit to run on",type=str)
 commandParse.add_argument("-lowkarma",help="adds a 10-minute wait after comments",action="store_true")
 commandParse.add_argument("-verbose",help="adds a 10-minute wait after comments",action="store_true")
+commandParse.add_argument("-notify",help="calls a shell command in some cases, such as errors",type=str)
 commandInput = commandParse.parse_args()
-redditUser = None
-redditUser = commandInput.username
-redditPass = None
-redditPass = commandInput.password
-redditSub = None
-redditSub = commandInput.subreddit
-lowKarma = False
-lowKarma = commandInput.lowkarma
-verboseMode = False
-verboseMode = commandInput.verbose
+redditUser   = None
+redditUser   = commandInput.username
+redditPass   = None
+redditPass   = commandInput.password
+redditSub    = None
+redditSub    = commandInput.subreddit
+lowKarma     = False
+lowKarma     = commandInput.lowkarma
+verboseMode  = False
+verboseMode  = commandInput.verbose
+notify       = False
+notify       = commandInput.notify
 
 if verboseMode:
     print("D: Imports completed")
 
-botVersionMajor = 1
-botVersionMinor = 3
-botVersionBuild = 0
+def send_notify(command, text):
+    call([command,text])
+    return 1
+
+if verboseMode:
+    print("D: Functions defined")
+
+botVersionMajor  = 1
+botVersionMinor  = 3
+botVersionBuild  = 1
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
 
 botOwner = '/u/link2x'
@@ -94,9 +105,9 @@ while True: #Main loop
 
                             httpsUrl = submission.url.replace("http://","https://") # Our bot expects HTTPS links, this makes sure we don't get bounced
                             httpsUrl = httpsUrl.replace("//reddit","//www.reddit") # People apparently can't link properly. This is causing greif
-                        
+
                             loadedPost = r.get_submission(url=httpsUrl) # It's go time; load the link
-                        
+
                             savingComments = regexRE.search(httpsUrl) # Are we looking for a comment, or just a post?
 
                             if verboseMode:
@@ -125,7 +136,7 @@ while True: #Main loop
                                 else:
                                     postType = 'link post' # Label the post
                                     postText = loadedPost.url # Save the link
-                                postRedditor = str(loadedPost.author) # Save the author    
+                                postRedditor = str(loadedPost.author) # Save the author
                                 postScore = str(loadedPost.score) # Save the post's score
                                 postTime = loadedPost.created_utc # Save the post's origin/edit date
                                 if verboseMode:
@@ -134,7 +145,7 @@ while True: #Main loop
                             # Now we have the information, lets set up our post
                             botTime = time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()) # Keep everything in UTC because why not
                             formatTime = time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime(postTime)) # ^
-    
+
                             if savingComments == True:
                                 botComment = 'The linked '+postType+' was posted '+formatTime+'\n\n'+postText+'\n****\n('+postScore+' Karma) ([About](/r/EDMSaveBot))'
                             else:
@@ -142,12 +153,12 @@ while True: #Main loop
 
                             if verboseMode:
                                 print("D: Comment formatted") # Debug for easy following
-                    
+
                             # Now we're all set to post, here we go.
                             submission.add_comment(botComment)
                             if verboseMode:
                                 print("D: Comment posted") # Debug for easy following
-    
+
                             already_done.append(submission.id)
 
                             if lowKarma:
@@ -176,5 +187,7 @@ while True: #Main loop
     except requests.exceptions.HTTPError as e: # These usually are caught in the first except, but just in case this catches 404s and the like.
         print("E: HTTP Code ", e.message)
     except: # I don't want this thing to crash, but this at least lets me know /when/ it happens.
+        if notify:
+            send_notify(notify, "EDMSaveBot running on /r/"+redditSub+" has crashed.")
         print("E: Unexpected error. Raising", time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()))
         raise;

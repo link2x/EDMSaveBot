@@ -40,3 +40,5 @@ As you garner upvotes, this problem will subside. You can alleviate this issue u
 `-lowkarma` - Adds a 10-minute pause between comments, used to alleviate low-karma cooldowns.
 
 `-verbose` - Shows more debug messages. Most are now hidden by default.
+
+`-notify "/path/to/program -arguments"` - In the event of a crash, this gets called along with a message.

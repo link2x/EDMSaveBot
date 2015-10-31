@@ -1,3 +1,7 @@
+##Version 1.3.1
+* -notify added. Combine with your favorite script/program.
+* Made the code look a tad nicer.
+
 ##Version 1.3.0
 * OAuth happened.
 
