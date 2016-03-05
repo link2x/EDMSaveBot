@@ -1,7 +1,7 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.3.2
+# Version 1.4.0
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
@@ -48,8 +48,8 @@ if verboseMode:
     print("D: Functions defined")
 
 botVersionMajor  = 1
-botVersionMinor  = 3
-botVersionBuild  = 2
+botVersionMinor  = 4
+botVersionBuild  = 0
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
 
 botOwner = '/u/link2x'
@@ -78,8 +78,10 @@ key = input("Reddit Key: ")
 access_information = r.get_access_information(key)
 r.set_access_credentials(**access_information)
 
-me = r.get_me()
+me = r.get_me().name
 
+if verboseMode:
+    print("D: me: "+me)
 
 if verboseMode:
     print("D: Logged in to reddit")
@@ -99,7 +101,7 @@ while True: #Main loop
                         searchComments = submission.comments # For all comments here
                         flatSearch = praw.helpers.flatten_tree(searchComments) # ^
                         for comment in flatSearch: # Run each comment
-                            if str(comment.author) == "EDMSaveBot": # Looking for our name
+                            if str(comment.author) == me: # Looking for our name
                                 already_done.append(submission.id) # Add this post to the list if we find it
                                 if verboseMode:
                                     print("D: Added old post to avoid list") # Debug for easy following
@@ -125,6 +127,7 @@ while True: #Main loop
                                 postText = loadedComment.body # Save the post
                                 postScore = str(loadedComment.score) # Save the post's score
                                 postTime = loadedComment.created_utc # Save the post's origin/edit date
+                                postSub = loadedComment.subreddit.display_name
                                 if verboseMode:
                                     print("D: Data collected successfully") # Debug for easy following
                             else:
@@ -141,6 +144,7 @@ while True: #Main loop
                                 postRedditor = str(loadedPost.author) # Save the author
                                 postScore = str(loadedPost.score) # Save the post's score
                                 postTime = loadedPost.created_utc # Save the post's origin/edit date
+                                postSub = loadedPost.subreddit.display_name
                                 if verboseMode:
                                     print("D: Data collected successfully") # Debug for easy following
 
@@ -149,9 +153,9 @@ while True: #Main loop
                             formatTime = time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime(postTime)) # ^
 
                             if savingComments == True:
-                                botComment = 'The linked '+postType+' was posted '+formatTime+'\n\n'+postText+'\n****\n('+postScore+' Karma) ([About](/r/EDMSaveBot))'
+                                botComment = 'The linked '+postType+' was posted '+formatTime+'\n\n'+postText+'\n****\n(/r/'+postSub+') ('+postScore+' Karma) ([About](/r/EDMSaveBot))'
                             else:
-                                botComment = 'The linked '+postType+' was posted '+formatTime+'\n****\n**'+postTitle+'**\n\n'+postText+'\n****\n('+postScore+' Karma) ([About](/r/EDMSaveBot))'
+                                botComment = 'The linked '+postType+' was posted '+formatTime+'\n****\n**'+postTitle+'**\n\n'+postText+'\n****\n(/r/'+postSub+') ('+postScore+' Karma) ([About](/r/EDMSaveBot))'
 
                             if verboseMode:
                                 print("D: Comment formatted") # Debug for easy following

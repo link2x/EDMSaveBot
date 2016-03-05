@@ -1,4 +1,9 @@
-##Version 1.3.2
+##Version 1.4.0
+* Now properly handles finding already-saved posts. (Username is no longer hardcoded.)
+* Saves original subreddit.
+* Added our username to verbose.
+
+##Version 1.3.2 - MILESTONE 1
 * -notify actually works now.
 
 ##Version 1.3.1
