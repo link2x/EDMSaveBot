@@ -1,11 +1,22 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.4.0
+# Version 1.4.1
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
 #
+
+
+# Constants
+
+botVersionMajor  = 1
+botVersionMinor  = 4
+botVersionBuild  = 1
+botOwner = '/u/link2x'
+
+
+# Imports
 
 import praw                 # reddit wrapper
 import re                   # Regular expressions
@@ -14,18 +25,18 @@ import argparse             # Allow for signing in from command-line
 import requests             # I guess praw uses this. Redefine to calm python down.
 from subprocess import call # We use this for -notify
 
+
+# CLI flag parsing
+
 commandParse = argparse.ArgumentParser()
-commandParse.add_argument("-username",help="reddit username",type=str)
-commandParse.add_argument("-password",help="reddit password",type=str)
+
 commandParse.add_argument("-subreddit",help="subreddit to run on",type=str)
 commandParse.add_argument("-lowkarma",help="adds a 10-minute wait after comments",action="store_true")
-commandParse.add_argument("-verbose",help="adds a 10-minute wait after comments",action="store_true")
+commandParse.add_argument("-verbose",help="adds debug messages",action="store_true")
 commandParse.add_argument("-notify",help="calls a shell command in some cases, such as errors",type=str)
+
 commandInput = commandParse.parse_args()
-redditUser   = None
-redditUser   = commandInput.username
-redditPass   = None
-redditPass   = commandInput.password
+
 redditSub    = None
 redditSub    = commandInput.subreddit
 lowKarma     = False
@@ -38,6 +49,9 @@ notify       = commandInput.notify
 if verboseMode:
     print("D: Imports completed")
 
+
+# Function declaration
+
 def send_notify(command, text):
     if verboseMode:
         print("D: Calling "+command+" "+text)
@@ -47,13 +61,10 @@ def send_notify(command, text):
 if verboseMode:
     print("D: Functions defined")
 
-botVersionMajor  = 1
-botVersionMinor  = 4
-botVersionBuild  = 0
+
+# Initialization
+
 botVersionString = str(botVersionMajor)+'.'+str(botVersionMinor)+'.'+str(botVersionBuild)
-
-botOwner = '/u/link2x'
-
 r = praw.Reddit("PRAW // EDMSave // v"+botVersionString+" // "+botOwner) # User agent to comply with reddit API standards
 
 if verboseMode:
@@ -61,6 +72,9 @@ if verboseMode:
 
 if (not redditSub):
     redditSub = input("Subreddit to run on: ")
+
+
+# Login
 
 print("Please sign into your bot account.")
 
@@ -85,6 +99,10 @@ if verboseMode:
 
 if verboseMode:
     print("D: Logged in to reddit")
+
+
+# Main loop
+
 print("EDMSaveBot version "+botVersionString+" running on /r/"+redditSub)
 
 already_done = [] # Used to help avoid re-commenting, doesn't last through reboots currently.
@@ -152,10 +170,11 @@ while True: #Main loop
                             botTime = time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()) # Keep everything in UTC because why not
                             formatTime = time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime(postTime)) # ^
 
-                            if savingComments == True:
-                                botComment = 'The linked '+postType+' was posted '+formatTime+'\n\n'+postText+'\n****\n(/r/'+postSub+') ('+postScore+' Karma) ([About](/r/EDMSaveBot))'
+                            if savingComments:
+                                botComment = 'The linked '+postType+' was posted '+formatTime+'\n****\n'+postText+'\n****\n(/r/'+postSub+') ('+postScore+' Karma) ([About](/r/EDMSaveBot))'
                             else:
                                 botComment = 'The linked '+postType+' was posted '+formatTime+'\n****\n**'+postTitle+'**\n\n'+postText+'\n****\n(/r/'+postSub+') ('+postScore+' Karma) ([About](/r/EDMSaveBot))'
+                                    
 
                             if verboseMode:
                                 print("D: Comment formatted") # Debug for easy following

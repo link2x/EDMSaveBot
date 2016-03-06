@@ -1,3 +1,9 @@
+##Version 1.4.1
+* Housekeeping. - Added a few more comments, moved some code.
+* Fixes saved comments having double horizontal rules.
+* Remove -username and -password, since they no longer do anything.
+* Fix -help description for -verbose.
+
 ##Version 1.4.0
 * Now properly handles finding already-saved posts. (Username is no longer hardcoded.)
 * Saves original subreddit.
