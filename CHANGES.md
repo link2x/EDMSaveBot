@@ -1,3 +1,6 @@
+##Version 1.5.0
+* Tries to fix constant crashes due to reddit running on potato servers.
+
 ##Version 1.4.1
 * Housekeeping. - Added a few more comments, moved some code.
 * Fixes saved comments having double horizontal rules.

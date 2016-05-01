@@ -11,8 +11,8 @@
 # Constants
 
 botVersionMajor  = 1
-botVersionMinor  = 4
-botVersionBuild  = 1
+botVersionMinor  = 5
+botVersionBuild  = 0
 botOwner = '/u/link2x'
 
 
@@ -211,6 +211,8 @@ while True: #Main loop
         print("E: Something strange happened. requests.exceptions.ConnectionError")
     except requests.exceptions.HTTPError as e: # These usually are caught in the first except, but just in case this catches 404s and the like.
         print("E: HTTP Code ", e.message)
+    except requests.exceptions.ReadTimeout as e:
+        print("E: Reddit is slow. Re-looping.")
     except: # I don't want this thing to crash, but this at least lets me know /when/ it happens.
         if notify:
             send_notify(notify, "'EDMSaveBot running on /r/"+redditSub+" has crashed.'")
