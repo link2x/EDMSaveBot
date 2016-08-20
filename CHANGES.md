@@ -1,3 +1,6 @@
+##Version 1.5.1
+* Fixes NP links once again.
+
 ##Version 1.5.0
 * Tries to fix constant crashes due to reddit running on potato servers.
 
