@@ -1,3 +1,7 @@
+##Version 1.5.2
+* Increased the number of checked posts.
+* Added submission id in some debug texts.
+
 ##Version 1.5.1
 * Fixes NP links once again.
 

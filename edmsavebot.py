@@ -1,7 +1,7 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.5.1
+# Version 1.5.2
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
@@ -12,7 +12,7 @@
 
 botVersionMajor  = 1
 botVersionMinor  = 5
-botVersionBuild  = 1
+botVersionBuild  = 2
 botOwner = '/u/link2x'
 
 
@@ -112,7 +112,7 @@ regexRE = re.compile(regexString) # This allows the above string to be used to s
 while True: #Main loop
     try:
         subreddit = r.get_subreddit(redditSub) #Set our subreddit. Glorious master race
-        for submission in subreddit.get_new(limit=10): #We'll look at the 10 newest posts
+        for submission in subreddit.get_new(limit=25): #We'll look at the 10 newest posts
             if submission.id not in already_done: # Make sure we haven't already ran this post
                 if ((submission.is_self==False) and (submission.domain=='reddit.com' or submission.domain=='np.reddit.com')): #If the post is a link pointing at reddit
                     if ('/comments/' in str(submission.url)): #Verify it's a post or comment we're being linked to
@@ -122,7 +122,7 @@ while True: #Main loop
                             if str(comment.author) == me: # Looking for our name
                                 already_done.append(submission.id) # Add this post to the list if we find it
                                 if verboseMode:
-                                    print("D: Added old post to avoid list") # Debug for easy following
+                                    print("D: Added old post to avoid list ("+str(submission.id)+")") # Debug for easy following
                         if submission.id not in already_done: #Make sure we haven't already ran this post
 
                             httpsUrl = submission.url.replace("http://","https://") # Our bot expects HTTPS links, this makes sure we don't get bounced
@@ -134,7 +134,7 @@ while True: #Main loop
                             savingComments = regexRE.search(httpsUrl) # Are we looking for a comment, or just a post?
 
                             if verboseMode:
-                                print("D: New post") # Debug for easy following
+                                print("D: New post ("+str(submission.id)+")") # Debug for easy following
 
                             if savingComments:
                                 if verboseMode:
