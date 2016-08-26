@@ -1,7 +1,7 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.5.2
+# Version 1.5.3
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
@@ -12,7 +12,7 @@
 
 botVersionMajor  = 1
 botVersionMinor  = 5
-botVersionBuild  = 2
+botVersionBuild  = 3
 botOwner = '/u/link2x'
 
 
@@ -128,6 +128,7 @@ while True: #Main loop
                             httpsUrl = submission.url.replace("http://","https://") # Our bot expects HTTPS links, this makes sure we don't get bounced
                             httpsUrl = httpsUrl.replace("//reddit","//www.reddit") # People apparently can't link properly. This is causing greif
                             httpsUrl = httpsUrl.replace("//np.reddit","//www.reddit") # Our bot is expecting www links, so let's double check that we have one
+                            httpsUrl = httpsUrl.partition("?")[0] # This removes php queries, most notably context
 
                             loadedPost = r.get_submission(url=httpsUrl) # It's go time; load the link
 
