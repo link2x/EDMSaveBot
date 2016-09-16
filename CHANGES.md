@@ -1,3 +1,6 @@
+##Version 1.6
+* Fixes mobile links.
+
 ##Version 1.5.3
 * Fixes PHP queries causing comments to have their initial post recorded instead.
 
