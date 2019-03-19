@@ -1,7 +1,7 @@
 # EDMSaveBot
 # By: /u/link2x (http://link2x.us/)
 #
-# Version 1.9 (v2 Beta)
+# Version 1.9.1 (v2 Beta)
 #
 # Purpose:
 #   This bot is intended to save the original contents of posts linked to by /r/EDMProdCircleJerk.
@@ -20,7 +20,7 @@ from subprocess import call # We use this for -notify
 # Constants
 botVersionMajor  = 1
 botVersionMinor  = 9
-botVersionBuild  = 0
+botVersionBuild  = 1
 botVersionString = str(botVersionMajor) + '.' + str(botVersionMinor) + '.' + str(botVersionBuild)
 botOwner = '/u/link2x'
 
@@ -55,6 +55,8 @@ botClient    = None
 botClient = commandInput.client
 botSecret    = None
 botSecret = commandInput.secret
+
+
 
 if verboseMode:
     print("D: Imports completed")
@@ -108,7 +110,7 @@ while True: #Main loop
         subreddit = r.subreddit(redditSub) #Set our subreddit. Glorious master race
         for submission in subreddit.stream.submissions(): #We'll look at the 10 newest posts
             if submission.id not in already_done: # Make sure we haven't already ran this post
-                if ((submission.is_self==False) and (submission.domain=='reddit.com' or submission.domain=='np.reddit.com')): #If the post is a link pointing at reddit
+                if ((submission.is_self==False) and (submission.domain=='reddit.com' or submission.domain=='np.reddit.com' or submission.domain[0:4]=="self")): #If the post is a link pointing at reddit
                     if ('/comments/' in str(submission.url)): #Verify it's a post or comment we're being linked to
                         for top_level_comment in submission.comments:
                             if str(top_level_comment.author) == me: # Looking for our name
@@ -188,11 +190,11 @@ while True: #Main loop
 
                     else:
                         if verboseMode:
-                            print("D: Post not applicable: Doesn't link to a post or comment") # Debug for easy following
+                            print("D: Post not applicable: Doesn't link to a post or comment ("+str(submission.id)+")") # Debug for easy following
                         already_done.append(submission.id)
                 else:
                     if verboseMode:
-                        print("D: Post not applicable: Doesn't link within reddit") # Debug for easy following
+                        print("D: Post not applicable: Doesn't link within reddit ("+str(submission.id)+" - " + submission.domain[0:4] + ")") # Debug for easy following
                     already_done.append(submission.id)
         print("I: Loop end "+time.strftime('at %I:%M %p (UTC) on %A %B %d.',time.gmtime()))
         time.sleep(15) # Wait a few seconds before looping
