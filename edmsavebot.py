@@ -208,8 +208,8 @@ while True: #Main loop
         #print("E: Something strange happened. requests.exceptions.ConnectionError")
     #except requests.exceptions.PRAWException.HTTPError as e: # These usually are caught in the first except, but just in case this catches 404s and the like.
         #print("E: HTTP Code ", e.message)
-    except prawcore.exceptions.ServerError as e:
-        print("E: Reddit is slow. Re-looping.")
+    #except prawcore.exceptions.ServerError as e:
+    #    print("E: Reddit is slow. Re-looping.")
     except praw.exceptions.APIException as e:
         print("E: API Error.")
         print(e)
